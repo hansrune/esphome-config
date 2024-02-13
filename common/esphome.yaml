@@ -1,0 +1,14 @@
+---
+# ESPHome Core configuration
+#
+# Sets the defaults for the main core configuration of my ESPHome devices.
+#
+# https://esphome.io/components/esphome.html
+#
+esphome:
+  name: "esp-${system_name}"
+  comment: "${description}"
+  build_path: "./.build/${system_name}/"
+
+preferences:
+  flash_write_interval: 86400s

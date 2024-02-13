@@ -1,0 +1,17 @@
+---
+#
+# SHTCx Temperature+Humidity Sensor
+#
+# The shtcx sensor platform Temperature+Humidity sensor allows you to use your
+# Sensiron SHTC1 and the newer SHTC3 sensors with ESPHome.
+#
+# https://esphome.io/components/sensor/htu21d
+#
+platform: htu21d
+temperature:
+  id: ${system_id}_temperature
+  name: "${friendly_name} temperature"
+humidity:
+  id: ${system_id}_humidity
+  name: "${friendly_name} humidity"
+update_interval: 63s

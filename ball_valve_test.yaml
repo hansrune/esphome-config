@@ -1,0 +1,38 @@
+---
+#
+# Test ball valve
+#
+
+########################
+# Mandatory part ....
+########################
+substitutions:
+  label: esp32a
+  system_name: ball-valve-test
+  system_id: ball_valve_test
+  friendly_name: Ball valve test
+  description: Test ball valve controller with CR05 feedback wiring
+  encryption_key: !secret esphome_encryption_key
+  ota_password: !secret esphome_ota_password
+
+packages:
+  device: !include devices/ball_valve_cr05.yaml
+  ########################
+  # Optional part ... include below components and sensors as needed
+  ########################
+  i2c: !include components/i2c_esp32c3.yaml
+  dallas: !include components/dallas_esp32c3.yaml
+
+sensor: 
+  - <<: !include sensors/htu21d.yaml
+  - platform: dallas
+    name: "${friendly_name} upper sensor"
+    id: ${system_id}_temperature_upper
+    dallas_id: wire_tx
+    index: 0 # only one sensor per wire - so index is safe
+  - platform: dallas
+    name: "${friendly_name} lower sensor"
+    id: ${system_id}_temperature_lower
+    dallas_id: wire_rx
+    index: 0 # only one sensor per wire - so index is safe
+

@@ -1,0 +1,10 @@
+---
+# 1-wire
+#
+# hhttps://esphome.io/components/sensor/dallas.html
+#
+dallas:
+  - pin: GPIO21
+    id: wire_tx
+  - pin: GPIO20
+    id: wire_rx

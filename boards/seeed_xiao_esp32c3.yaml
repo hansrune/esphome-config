@@ -1,0 +1,10 @@
+---
+# Seeed Studio XIAO ESP32C3
+#
+# https://docs.platformio.org/en/latest/boards/espressif32/seeed_xiao_esp32c3.html
+#
+esp32:
+  board: seeed_xiao_esp32c3
+  framework:
+    type: arduino # alternatively esp-idf
+    version: recommended

@@ -1,0 +1,236 @@
+---
+#
+# This is my ESPHome device template for my Ball Valve controller
+#
+packages:
+  <<: !include_dir_named ../common
+  board: !include ../boards/seeed_xiao_esp32c3.yaml
+
+globals:
+  - id: valve_normally_open
+    type: bool
+    # restore_value: yes
+    initial_value: 'false'
+  - id: valve_normally_closed
+    type: bool
+    # restore_value: yes
+    initial_value: 'false'
+  - id: valve_status_led_on_time
+    type: int
+    initial_value: '100'
+  - id: valve_status_led_off_time
+    type: int
+    initial_value: '100'
+
+sensor:
+  - platform: adc
+    pin: GPIO3 # A1
+    id: ${system_id}_battery_voltage
+    name: "${friendly_name} battery"
+    update_interval: never
+    attenuation: 11dB
+    unit_of_measurement: "V"
+    filters:
+      - calibrate_linear:
+          method: least_squares
+          datapoints:
+            - 0.004 -> 0.0
+            - 2.114 -> 9.34
+
+binary_sensor:
+  - platform: gpio
+    id: ${system_id}_status_open
+    name: "${friendly_name} open"
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+      inverted: true
+    on_press:
+      then: 
+        - globals.set:
+            id: valve_status_led_on_time
+            value: '5000'
+    on_release:
+        - globals.set:
+            id: valve_status_led_on_time
+            value: '1000'
+
+  - platform: gpio
+    id: ${system_id}_status_closed
+    name: "${friendly_name} closed"
+    pin:
+      number: GPIO5
+      mode: INPUT_PULLUP
+      inverted: true
+    on_press:
+      then: 
+        - globals.set:
+            id: valve_status_led_off_time
+            value: '5000'
+    on_release:
+        - globals.set:
+            id: valve_status_led_off_time
+            value: '1000'
+
+text_sensor:
+  - platform: template
+    #internal: true
+    name: "${friendly_name} operation mode"
+    id: ${system_id}_op_mode
+    entity_category: diagnostic
+
+  - platform: template
+    #internal: true
+    name: "${friendly_name} boot time"
+    id: ${system_id}_boot_time
+    entity_category: diagnostic
+
+switch:
+  - platform: gpio
+    id: ${system_id}_valve_relay
+    name: "${friendly_name} relay"
+    entity_category: diagnostic
+    pin: GPIO10
+    restore_mode: ALWAYS_OFF
+
+output:
+  - platform: gpio
+    id: valve_battery_read_enable
+    pin:
+      number: GPIO2
+      inverted: true
+
+  - platform: gpio
+    id: valve_status_led_out
+    pin:
+      number: GPIO9
+      inverted: true
+
+cover:
+  - platform: feedback
+    name: "${friendly_name} control"
+    id: ${system_id}_valve_control
+    icon: mdi:valve
+    has_built_in_endstop: true
+    open_action:
+      - lambda: |-
+          if (id(valve_normally_open) != id(valve_normally_closed)){
+            if (id(valve_normally_open) && ! id(valve_normally_closed)){
+              ESP_LOGI("Valve", "Turn off switch for normally open valve");
+              id(${system_id}_valve_relay).turn_off();
+            } else {
+              ESP_LOGI("Valve", "Turn off switch for normally closed valve");
+              id(${system_id}_valve_relay).turn_on();
+            }
+            id(valve_status_led_on_time) = 500;
+            id(valve_status_led_off_time) = 500;
+          } else {
+            ESP_LOGE("Valve", "No action - cannot determine normally open/closed");
+            id(valve_status_led_on_time) = 3000;
+            id(valve_status_led_off_time) = 3000;
+          }
+    open_duration: 6s
+    open_endstop: ${system_id}_status_open
+    close_action:
+      - lambda: |-
+          if (id(valve_normally_open) != id(valve_normally_closed)) {
+            if (id(valve_normally_open)){
+              ESP_LOGI("Valve", "Turn off switch for normally open valve");
+              id(${system_id}_valve_relay).turn_on();
+            } else {
+              ESP_LOGI("Valve", "Turn off switch for normally closed valve");
+              id(${system_id}_valve_relay).turn_off();
+            }
+            id(valve_status_led_on_time) = 500;
+            id(valve_status_led_off_time) = 500;
+          } else {
+            ESP_LOGE("Valve", "No action - cannot determine normally open/closed");
+            id(valve_status_led_on_time) = 3000;
+            id(valve_status_led_off_time) = 3000;
+          }
+    close_duration: 10s
+    close_endstop: ${system_id}_status_closed
+    stop_action:
+      - switch.turn_off: ${system_id}_valve_relay
+
+interval:
+  - interval: 1h
+    then:
+      - output.turn_on: valve_battery_read_enable
+      - delay: 20ms
+      - component.update: ${system_id}_battery_voltage
+      - delay: 3s 
+      - output.turn_off: valve_battery_read_enable
+  # - interval: 6s
+  #   then:
+  #     - logger.log:
+  #         format: "Ontime=%d offime=%d"
+  #         args: [ 'id(valve_status_led_on_time)', id(valve_status_led_off_time) ]
+  #     - output.turn_on: valve_status_led_out
+  #     - delay: !lambda "return id(valve_status_led_on_time)*1000;"
+  #     - output.turn_off: valve_status_led_out
+
+esphome:
+  on_boot:
+    - priority: 800
+      then:
+        - logger.log: 
+            format: "Waiting for ball valve return to default state"
+            level: info
+        - delay: 7s
+        # - logger.log: 
+        #     format: "valve_status_open=%s valve_status_open=%s"
+        #     args: [ 'id(valve_status_open).state', id(valve_status_closed).state ]
+        - lambda: |-
+            static char tstr[17];
+            time_t currTime = id(${system_id}_time_sntp).now().timestamp;
+            strftime(tstr, sizeof(tstr), "%Y-%m-%d %H:%M", localtime(&currTime));
+            id(${system_id}_boot_time).publish_state(tstr);
+        - if:
+            condition:
+              and:
+                - binary_sensor.is_on: ${system_id}_status_open
+                - binary_sensor.is_off: ${system_id}_status_closed
+            then:
+              - logger.log: 
+                  format: "Valve is normally open"
+                  level: info
+              - lambda: |-
+                  id(${system_id}_op_mode).publish_state("Normally open");
+                  id(valve_normally_open) = true;
+                  id(valve_normally_closed) = false;
+                  id(valve_status_led_on_time) = 5000;
+                  id(valve_status_led_off_time) = 1000;
+        - if:
+            condition: 
+              and:
+                - binary_sensor.is_off: ${system_id}_status_open
+                - binary_sensor.is_on: ${system_id}_status_closed
+            then:
+              - logger.log:
+                  format: "Valve is normally closed"
+                  level: info
+              - lambda: |-
+                  id(${system_id}_op_mode).publish_state("Normally closed");
+                  id(valve_normally_open) = false;
+                  id(valve_normally_closed) = true;
+                  id(valve_status_led_on_time) = 1000;
+                  id(valve_status_led_off_time) = 5000;
+
+    - priority: 600
+      then:
+        - logger.log: "Start status LED"
+        - while:
+            condition:
+              or:
+                # Just a stupid way of making it loop forever ...
+                - binary_sensor.is_on: ${system_id}_status_closed
+                - binary_sensor.is_off: ${system_id}_status_closed 
+            then:
+              - logger.log:
+                  format: "Ontime=%d offime=%d"
+                  args: [ 'id(valve_status_led_on_time)', id(valve_status_led_off_time) ]
+              - output.turn_on: valve_status_led_out
+              - delay: !lambda "return id(valve_status_led_on_time);"
+              - output.turn_off: valve_status_led_out
+              - delay: !lambda "return id(valve_status_led_off_time);"
