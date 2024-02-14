@@ -223,8 +223,8 @@ esphome:
             condition:
               or:
                 # Just a stupid way of making it loop forever ...
-                - binary_sensor.is_on: ${system_id}_status_closed
-                - binary_sensor.is_off: ${system_id}_status_closed 
+                - lambda: 'return id(valve_status_led_out) == 0;'
+                - lambda: 'return id(valve_status_led_out) != 0;'
             then:
               - logger.log:
                   format: "Ontime=%d offime=%d"
