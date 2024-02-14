@@ -2,3 +2,4 @@
 **/.DS_Store
 /.esphome/
 /secrets.yaml
+**/*.pyc
