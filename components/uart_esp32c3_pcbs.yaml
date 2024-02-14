@@ -1,6 +1,6 @@
 ---
 # 
-# UART for ESP32C3 my boards
+# UART for my XIAO ESP32C3 my boards
 #
 uart:
   rx_pin: GPIO20
