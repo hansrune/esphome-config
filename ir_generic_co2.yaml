@@ -26,11 +26,7 @@ sensor:
   - <<: !include sensors/htu21d.yaml
   - <<: !include sensors/tsl2561.yaml
   - <<: !include sensors/mhz19.yaml
-  - platform: dallas
-    name: "${friendly_name} 1-wire sensor"
-    id: ${system_id}_temperature_1wire
-    # dallas_id: wire_5
-    index: 0 # only one sensor per wire - so index is safe
+  - <<: !include sensors/dallas-x1.yaml
 
 binary_sensor:
   - platform: gpio
