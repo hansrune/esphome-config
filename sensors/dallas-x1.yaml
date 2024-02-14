@@ -1,0 +1,8 @@
+---
+#
+# Generix 1 wire dallas sensor when just one is being used
+#
+platform: dallas
+name: "${friendly_name} 1-wire sensor"
+id: ${system_id}_temperature_1wire
+index: 0 # only one sensor per wire - so index is safe
