@@ -26,7 +26,7 @@ text_sensor:
 
 output:
   - platform: gpio
-    id: valve_status_led_out
+    id: status_led_out
     pin:
       number: GPIO9
       inverted: true
@@ -58,13 +58,13 @@ esphome:
             condition:
               or:
                 # Just a stupid way of making it loop forever ...
-                - binary_sensor.is_on: ${system_id}_pir_sensor
-                - binary_sensor.is_off: ${system_id}_pir_sensor 
+                - lambda: 'return id(status_led_out) == 0;'
+                - lambda: 'return id(status_led_out) != 0;'
             then:
               - logger.log:
                   format: "Ontime=%d offime=%d"
                   args: [ 'id(status_led_on_time)', id(status_led_off_time) ]
-              - output.turn_on: valve_status_led_out
+              - output.turn_on: status_led_out
               - delay: !lambda "return id(status_led_on_time);"
-              - output.turn_off: valve_status_led_out
+              - output.turn_off: status_led_out
               - delay: !lambda "return id(status_led_off_time);"
