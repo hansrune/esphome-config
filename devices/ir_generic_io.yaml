@@ -14,15 +14,7 @@ globals:
     type: int
     initial_value: '5000'
 
-binary_sensor:
-  - platform: gpio
-    device_class: motion
-    id: ${system_id}_pir_sensor
-    name: "${friendly_name} movement sensor"
-    pin:
-      number: GPIO10
-      mode: INPUT_PULLUP
-      inverted: true
+
 
 text_sensor:
   - platform: template

@@ -32,3 +32,12 @@ sensor:
     # dallas_id: wire_5
     index: 0 # only one sensor per wire - so index is safe
 
+binary_sensor:
+  - platform: gpio
+    device_class: motion
+    id: ${system_id}_pir_sensor
+    name: "${friendly_name} movement sensor"
+    pin:
+      number: GPIO10
+      mode: INPUT_PULLUP
+      inverted: true
