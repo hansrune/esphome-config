@@ -20,8 +20,8 @@ packages:
   ########################
   # Optional part ... include below components and sensors as needed
   ########################
-  i2c: !include components/i2c_esp32c3.yaml
-  dallas: !include components/dallas_esp32c3.yaml
+  i2c: !include components/i2c_esp32c3_pcbs.yaml
+  dallas: !include components/1wire_valve_pcb.yaml
 
 sensor: 
   - <<: !include sensors/htu21d.yaml

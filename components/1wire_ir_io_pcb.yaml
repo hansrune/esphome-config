@@ -1,0 +1,8 @@
+---
+# 1-wire
+#
+# hhttps://esphome.io/components/sensor/dallas.html
+#
+dallas:
+  - pin: GPIO5
+    id: wire_5

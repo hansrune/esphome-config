@@ -1,0 +1,8 @@
+---
+# 
+# UART for ESP32C3 my boards
+#
+uart:
+  rx_pin: GPIO20
+  tx_pin: GPIO21
+  baud_rate: 9600
