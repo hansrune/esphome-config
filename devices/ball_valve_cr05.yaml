@@ -1,5 +1,4 @@
 ---
-#
 # This is my ESPHome device template for my Ball Valve controller
 #
 packages:

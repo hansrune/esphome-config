@@ -1,0 +1,78 @@
+---
+#
+# This is my ESPHome device template for my Ball Valve controller
+#
+packages:
+  <<: !include_dir_named ../common
+  board: !include ../boards/seeed_xiao_esp32c3.yaml
+
+globals:
+  - id: status_led_on_time
+    type: int
+    initial_value: '1000'
+  - id: status_led_off_time
+    type: int
+    initial_value: '5000'
+
+binary_sensor:
+  - platform: gpio
+    device_class: motion
+    id: ${system_id}_pir_sensor
+    name: "${friendly_name} movement sensor"
+    pin:
+      number: GPIO10
+      mode: INPUT_PULLUP
+      inverted: true
+
+text_sensor:
+  - platform: template
+    #internal: true
+    name: "${friendly_name} boot time"
+    id: ${system_id}_boot_time
+    entity_category: diagnostic
+
+
+output:
+  - platform: gpio
+    id: valve_status_led_out
+    pin:
+      number: GPIO9
+      inverted: true
+
+
+# interval:
+#   - interval: 1h
+#     then:
+#       - output.turn_on: valve_battery_read_enable
+#       - delay: 20ms
+#       - component.update: ${system_id}_battery_voltage
+#       - delay: 3s 
+#       - output.turn_off: valve_battery_read_enable
+
+esphome:
+  on_boot:
+    - priority: 800
+      then:
+        - lambda: |-
+            static char tstr[17];
+            time_t currTime = id(${system_id}_time_sntp).now().timestamp;
+            strftime(tstr, sizeof(tstr), "%Y-%m-%d %H:%M", localtime(&currTime));
+            id(${system_id}_boot_time).publish_state(tstr);
+
+    - priority: 600
+      then:
+        - logger.log: "Start status LED"
+        - while:
+            condition:
+              or:
+                # Just a stupid way of making it loop forever ...
+                - binary_sensor.is_on: ${system_id}_pir_sensor
+                - binary_sensor.is_off: ${system_id}_pir_sensor 
+            then:
+              - logger.log:
+                  format: "Ontime=%d offime=%d"
+                  args: [ 'id(status_led_on_time)', id(status_led_off_time) ]
+              - output.turn_on: valve_status_led_out
+              - delay: !lambda "return id(status_led_on_time);"
+              - output.turn_off: valve_status_led_out
+              - delay: !lambda "return id(status_led_off_time);"
