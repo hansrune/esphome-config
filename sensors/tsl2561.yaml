@@ -1,0 +1,9 @@
+---
+#
+# TSL2561 Ambient Light Sensor¶
+#
+# https://esphome.io/components/sensor/tsl2561.html?highlight=tsl2561
+#
+platform: tsl2561
+id: ${system_id}_illuminance
+name: "${friendly_name} illuminance"

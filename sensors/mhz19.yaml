@@ -1,0 +1,18 @@
+---
+#
+# MH-Z19 CO_2 and Temperature Sensor
+#
+# https://esphome.io/components/sensor/mhz19.html?
+#
+
+
+platform: mhz19
+co2:
+  id: ${system_id}_mhz19_ppm
+  name: "${friendly_name} MHZ19 PPM"
+temperature:
+  id: ${system_id}_mhz19_temperature
+  name: "${friendly_name} MHZ19 temp"
+update_interval: 60s
+automatic_baseline_calibration: false
+

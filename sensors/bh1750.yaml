@@ -1,0 +1,9 @@
+---
+#
+# BH1750 Ambient Light Sensor¶
+#
+# https://esphome.io/components/sensor/bh1750.html
+#
+platform: bh1750
+id: ${system_id}_illuminance
+name: "${friendly_name} illuminance"
