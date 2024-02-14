@@ -1,3 +1,4 @@
 # Gitignore settings for ESPHome
+**/.DS_Store
 /.esphome/
 /secrets.yaml
