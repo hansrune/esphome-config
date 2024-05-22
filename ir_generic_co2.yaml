@@ -1,6 +1,6 @@
 ---
 #
-# Test ball valve
+# IR blaster generic IO pcb with CO2 + dallas + PIR sensors + i2c sensors
 #
 
 substitutions:
@@ -8,19 +8,26 @@ substitutions:
   system_name: io-test-1
   system_id: io_test_1
   friendly_name: IO test 1
-  description: Generid IO with IR blaster, I2C and CO2 sensors
+  description: Generic IO with IR blaster, I2C and CO2 sensors
   encryption_key: !secret esphome_encryption_key
   ota_password: !secret esphome_ota_password
 
 packages:
-  device: !include devices/ir_generic_io.yaml
-  i2c: !include components/i2c_esp32c3_pcbs.yaml
-  dallas: !include components/1wire_ir_io_pcb.yaml
+  device: !include devices/hp_genio_esp32c3.yaml
+  i2c: !include components/i2c_hp_genio_esp32c3.yaml
+  dallas: !include components/1wire_hp_genio_esp32c3.yaml
 
+esphome:
+  platformio_options:
+    board_build.extra_flags:
+      - "-DARDUINO_USB_CDC_ON_BOOT=0"
+      - "-DARDUINO_USB_MODE=1"  
+      
 uart:
+  id: hpuart_esp32c3
   rx_pin: GPIO20
   tx_pin: GPIO21
-  baud_rate: 9600
+  baud_rate: 2400
 
 sensor: 
   - <<: !include sensors/htu21d.yaml

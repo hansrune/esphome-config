@@ -8,3 +8,8 @@ esp32:
   framework:
     type: arduino # alternatively esp-idf
     version: recommended
+
+# uart:
+#   rx_pin: GPIO20
+#   tx_pin: GPIO21
+# #  baud_rate: 115200

@@ -11,3 +11,5 @@ logger:
   # Set to 0 to disable
   baud_rate: 115200
   # level: VERBOSE
+  #hardware_uart: USB_SERIAL_JTAG
+  #hardware_uart: uart0

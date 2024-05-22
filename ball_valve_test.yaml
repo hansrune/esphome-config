@@ -16,12 +16,12 @@ substitutions:
   ota_password: !secret esphome_ota_password
 
 packages:
-  device: !include devices/ball_valve_cr05.yaml
+  device: !include devices/ball_valve_ctrl_esp32c3.yaml
   ########################
   # Optional part ... include below components and sensors as needed
   ########################
-  i2c: !include components/i2c_esp32c3_pcbs.yaml
-  dallas: !include components/1wire_valve_pcb.yaml
+  i2c: !include components/i2c_ball_valve_ctrl_esp32c3.yaml
+  dallas: !include components/1wire_ball_valve_ctrl_esp32c3.yaml
 
 sensor: 
   - <<: !include sensors/htu21d.yaml
