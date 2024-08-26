@@ -9,9 +9,9 @@
 #
 platform: htu21d
 temperature:
-  id: ${system_id}_temperature
-  name: "${friendly_name} temperature"
+  id: ${system_id}_i2c_temperature
+  name: "${friendly_name} I2C temperature"
 humidity:
-  id: ${system_id}_humidity
-  name: "${friendly_name} humidity"
+  id: ${system_id}_i2c_humidity
+  name: "${friendly_name} I2C humidity"
 update_interval: 63s
