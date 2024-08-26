@@ -8,9 +8,9 @@
 ########################
 substitutions:
   label: esp32a
-  system_name: ball-valve-test
-  system_id: ball_valve_test
-  friendly_name: Ball valve test
+  system_name: ball-valve-1
+  system_id: ball_valve_1
+  friendly_name: Ball valve 1
   description: Test ball valve controller with CR05 feedback wiring
   encryption_key: !secret esphome_encryption_key
   ota_password: !secret esphome_ota_password
@@ -25,14 +25,16 @@ packages:
 
 sensor: 
   - <<: !include sensors/htu21d.yaml
-  - platform: dallas
-    name: "${friendly_name} upper sensor"
+  - platform: dallas_temp
+    name: "${friendly_name} upper 1-wire"
     id: ${system_id}_temperature_upper
-    dallas_id: wire_tx
-    index: 0 # only one sensor per wire - so index is safe
-  - platform: dallas
-    name: "${friendly_name} lower sensor"
+    one_wire_id: wire_tx
+    #dallas_id: wire_tx
+    #address:  # only one sensor per wire - so none needed
+  - platform: dallas_temp
+    name: "${friendly_name} lower 1-wire"
     id: ${system_id}_temperature_lower
-    dallas_id: wire_rx
-    index: 0 # only one sensor per wire - so index is safe
+    one_wire_id: wire_rx
+    #allas_id: wire_rx
+    #address:  # only one sensor per wire - so none needed
 

@@ -3,6 +3,7 @@
 #
 # hhttps://esphome.io/components/sensor/dallas.html
 #
-dallas:
-  - pin: GPIO5
+one_wire:
+  - platform: gpio
+    pin: GPIO5
     id: wire_5

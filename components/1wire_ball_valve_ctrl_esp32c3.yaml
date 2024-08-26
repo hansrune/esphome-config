@@ -1,10 +1,12 @@
 ---
 # 1-wire
 #
-# hhttps://esphome.io/components/sensor/dallas.html
+# https://esphome.io/components/one_wire
 #
-dallas:
-  - pin: GPIO21
-    id: wire_tx
-  - pin: GPIO20
+one_wire:
+  - platform: gpio
+    pin: GPIO21
     id: wire_rx
+  - platform: gpio
+    pin: GPIO20
+    id: wire_tx
