@@ -17,11 +17,11 @@ packages:
   i2c: !include components/i2c_hp_genio_esp32c3.yaml
   dallas: !include components/1wire_hp_genio_esp32c3.yaml
 
-esphome:
-  platformio_options:
-    board_build.extra_flags:
-      - "-DARDUINO_USB_CDC_ON_BOOT=0"
-      - "-DARDUINO_USB_MODE=1"  
+# esphome:
+#   platformio_options:
+#     board_build.extra_flags:
+#       - "-DARDUINO_USB_CDC_ON_BOOT=0"
+#       - "-DARDUINO_USB_MODE=1"  
       
 uart:
   id: hpuart_esp32c3
@@ -33,13 +33,13 @@ sensor:
   - <<: !include sensors/htu21d.yaml
   - <<: !include sensors/tsl2561.yaml
   - <<: !include sensors/mhz19.yaml
-  - <<: !include sensors/dallas-x1.yaml
+#  - <<: !include sensors/dallas-x1.yaml
 
 binary_sensor:
   - platform: gpio
     device_class: motion
     id: ${system_id}_pir_sensor
-    name: "${friendly_name} movement sensor"
+    name: "${friendly_name} PIR sensor"
     pin:
       number: GPIO10
       mode: INPUT_PULLUP
