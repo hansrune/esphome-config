@@ -5,26 +5,24 @@
 
 substitutions:
   label: esp32b
-  system_name: io-test-2
-  system_id: io_test_2
+  system_name: mitsubishi-hp-1
+  system_id: heatpump_1
   pcb_layout: hp_genio_esp32c3
-  friendly_name: IO test 2
-  description: Generid IO with IR blaster, I2C and CO2 sensors
+  friendly_name: Mitsubishi HP
+  description: Uses generic IO board with IR blaster, serial port, I2C and CO2 sensors
   encryption_key: !secret esphome_encryption_key
   ota_password: !secret esphome_ota_password
-
-
 
 packages:
   device: !include devices/hp_genio_esp32c3.yaml
   i2c: !include components/i2c_hp_genio_esp32c3.yaml
   dallas: !include components/1wire_hp_genio_esp32c3.yaml
 
-esphome:
-  platformio_options:
-    board_build.extra_flags:
-      - "-DARDUINO_USB_CDC_ON_BOOT=0"
-      - "-DARDUINO_USB_MODE=1"  
+# esphome:
+#   platformio_options:
+#     board_build.extra_flags:
+#       - "-DARDUINO_USB_CDC_ON_BOOT=0"
+#       - "-DARDUINO_USB_MODE=1"  
 
 uart:
   id: hpuart_esp32c3
@@ -34,17 +32,15 @@ uart:
 
 sensor: 
   - <<: !include sensors/htu21d.yaml
-  # - <<: !include sensors/tsl2561.yaml
+  - <<: !include sensors/tsl2561.yaml
   # - <<: !include sensors/mhz19.yaml
-  # - <<: !include sensors/dallas-x1.yaml
+  - <<: !include sensors/dallas-x1.yaml
 
 external_components:
-  # - source: github://geoffdavis/esphome-mitsubishiheatpump
   - source:
       type: local
       path: custom_components
-  - source: github://pr#4499
-    components: [ heatpumpir ]   
+  - source: github://echavet/MitsubishiCN105ESPHome
 
 # remote_receiver:
 #   id: ${system_id}_rcvr
@@ -59,27 +55,35 @@ remote_transmitter:
   pin: GPIO4
   carrier_duty_percent: 50%
 
-   
-
 climate:
   # Arduino only
   - platform: heatpumpir
     id: ${system_id}_hp_ir
-    name: "${friendly_name} IR"
+    name: "${friendly_name} IR" 
     protocol: mitsubishi_heavy_kj
     max_temperature: 31
     min_temperature: 10
     vertical_default: auto
     horizontal_default: auto
 
-  - platform: mitsubishi_heatpump
+  - platform: cn105
     id: ${system_id}_hp_cn105
-    name: "${friendly_name} serial"
-    supports:
-      mode: [HEAT_COOL, COOL, HEAT, FAN_ONLY]
-      fan_mode: [AUTO, LOW, MEDIUM, HIGH]
-      swing_mode: ['OFF', 'VERTICAL']
+    name: "${friendly_name} CN105"
+    icon: mdi:heat-pump
     visual:
       min_temperature: 10
       max_temperature: 31
-      temperature_step: 1.0
+      temperature_step:
+        target_temperature: 1
+        current_temperature: 0.1
+    compressor_frequency_sensor:
+      name: "${friendly_name} CN105 Compressor Frequency"
+    vertical_vane_select:
+      name: "${friendly_name} CN105 Vertical Vane"
+    horizontal_vane_select:
+      name: "${friendly_name} CN105 Horizontal Vane"
+    isee_sensor:
+      name: "${friendly_name} CN105 ISee Sensor"
+    remote_temperature_timeout: 30min
+    debounce_delay : 500ms
+    update_interval: 4s
