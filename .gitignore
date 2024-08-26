@@ -3,5 +3,6 @@
 /.esphome/
 /secrets.yaml
 **/*.pyc
-**/__init__*
+**/__init__**
+**/__pycache__**
 .venv*
