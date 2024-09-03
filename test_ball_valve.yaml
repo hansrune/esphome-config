@@ -7,7 +7,6 @@
 # Mandatory part ....
 ########################
 substitutions:
-  label: esp32a
   system_name: ball-valve-1
   system_id: ball_valve_1
   friendly_name: Ball valve 1

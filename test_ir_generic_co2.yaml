@@ -4,10 +4,9 @@
 #
 
 substitutions:
-  label: esp32b
-  system_name: io-test-1
-  system_id: io_test_1
-  friendly_name: IO test 1
+  system_name: io-generic-1
+  system_id: io_generic_1
+  friendly_name: IO 1
   description: Generic IO with IR blaster, I2C and CO2 sensors
   encryption_key: !secret esphome_encryption_key
   ota_password: !secret esphome_ota_password

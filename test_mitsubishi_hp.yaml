@@ -4,10 +4,8 @@
 #
 
 substitutions:
-  label: esp32b
   system_name: mitsubishi-hp-1
   system_id: heatpump_1
-  pcb_layout: hp_genio_esp32c3
   friendly_name: Mitsubishi HP
   description: Uses generic IO board with IR blaster, serial port, I2C and CO2 sensors
   encryption_key: !secret esphome_encryption_key
@@ -56,7 +54,7 @@ remote_transmitter:
   carrier_duty_percent: 50%
 
 climate:
-  # Arduino only
+  # Arduino platform only
   - platform: heatpumpir
     id: ${system_id}_hp_ir
     name: "${friendly_name} IR" 

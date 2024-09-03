@@ -8,23 +8,27 @@
 # https://esphome.io/components/api.html
 #
 # api:
-#   # id: component_api
-#   # encryption:
+#   id: component_api
+#   encryption:
 #   reboot_timeout: 10min
 
-# https://esphome.io/components/api.html
 
+#
+# In this config - we use a mqtt broker so that multipe systems can use the device
+# Home Assistant users will likely use homeassistant for both prefixes
+# 
 mqtt:
   broker: !secret mqtt_broker_host
   discovery_prefix: !secret mqtt_discovery_prefix
   topic_prefix: !secret mqtt_topic_prefix
 
 #
-# Manually downloaded - then s/LOG_KERN/LOG_LOCAL4/g
+# Id you want the ESP device to syslog - download manually - then s/LOG_KERN/LOG_LOCAL4/g for other syslog facilities
 #
 # external_components:
 #   - source: github://TheStaticTurtle/esphome_syslog
 #     components: [syslog]
 
-syslog:
-  ip_address: !secret syslog_ip_address
+#syslog:
+#  ip_address: !secret syslog_ip_address
+

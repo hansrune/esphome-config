@@ -7,5 +7,5 @@
 # https://esphome.io/components/text_sensor/version.html
 #
 platform: version
-id: text_sensor_version
+id: ${system_id}_sensor_version
 name: "${friendly_name} ESPHome Version"

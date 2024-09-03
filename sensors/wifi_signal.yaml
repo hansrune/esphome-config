@@ -7,7 +7,7 @@
 # https://esphome.io/components/sensor/wifi_signal.html
 #
 platform: wifi_signal
-id: sensor_wifi_signal
+id: ${system_id}_wifi_signal
 name: "${friendly_name} Wi-Fi Signal"
 entity_category: diagnostic
 state_class: measurement

@@ -9,14 +9,12 @@ substitutions:
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
   wifi_ap_password: !secret wifi_password
-  # wifi_domain: !secret wifi_domain
 
 wifi:
   id: ${system_id}_wifi
   ssid: "${wifi_ssid}"
   password: "${wifi_password}"
   reboot_timeout: 10min
-  # do not set: domain: "${wifi_domain}"
 
   ap:
     ssid: "${friendly_name}"
@@ -26,7 +24,6 @@ wifi:
 
 sensor:
   - <<: !include ../sensors/wifi_signal.yaml
-
 
 text_sensor:
   - <<: !include ../text_sensors/version.yaml
