@@ -1,0 +1,126 @@
+---
+#
+# This is my ESPHome device template for my Ball Valve controller
+#
+packages:
+  <<: !include_dir_named ../common
+  board: !include ../boards/seeed_xiao_esp32c3.yaml
+
+globals:
+  - id: status_led_on_time
+    type: int
+    initial_value: '1000'
+  - id: status_led_off_time
+    type: int
+    initial_value: '5000'
+
+text_sensor:
+  - platform: template
+    #internal: true
+    name: "${friendly_name} boot time"
+    id: ${system_id}_boot_time
+    entity_category: diagnostic
+
+
+output:
+  - platform: gpio
+    id: status_led_out
+    pin:
+      number: GPIO9
+      inverted: true
+
+switch:
+  - platform: gpio
+    id: valve_a
+    pin:
+      number: GPIO3
+      inverted: false
+  - platform: gpio
+    id: valve_b
+    pin:
+      number: GPIO4
+      inverted: false
+  - platform: gpio
+    id: valve_c
+    pin:
+      number: GPIO5
+      inverted: false
+  - platform: gpio
+    id: valve_d
+    pin:
+      number: GPIO8
+      inverted: false
+
+valve:
+  - platform: template
+    name: "${friendly_name} a"
+    id: ${system_id}_valve_a
+    icon: mdi:valve
+    open_action:
+      - switch.turn_on: valve_a
+    close_action:
+      - switch.turn_off: valve_a
+    stop_action:
+      - switch.turn_off: valve_a
+    optimistic: true
+  - platform: template
+    name: "${friendly_name} b"
+    id: ${system_id}_valve_b
+    icon: mdi:valve
+    open_action:
+      - switch.turn_on: valve_b
+    close_action:
+      - switch.turn_off: valve_b
+    stop_action:
+      - switch.turn_off: valve_b
+    optimistic: true
+  - platform: template
+    name: "${friendly_name} c"
+    id: ${system_id}_valve_c
+    icon: mdi:valve
+    open_action:
+      - switch.turn_on: valve_c
+    close_action:
+      - switch.turn_off: valve_c
+    stop_action:
+      - switch.turn_off: valve_c
+    optimistic: true
+  - platform: template
+    name: "${friendly_name} d"
+    id: ${system_id}_valve_d
+    icon: mdi:valve
+    open_action:
+      - switch.turn_on: valve_d
+    close_action:
+      - switch.turn_off: valve_d
+    stop_action:
+      - switch.turn_off: valve_d
+    optimistic: true
+
+esphome:
+  on_boot:
+    - priority: 800
+      then:
+        - lambda: |-
+            static char tstr[17];
+            time_t currTime = id(${system_id}_time_sntp).now().timestamp;
+            strftime(tstr, sizeof(tstr), "%Y-%m-%d %H:%M", localtime(&currTime));
+            id(${system_id}_boot_time).publish_state(tstr);
+
+    - priority: 600
+      then:
+        - logger.log: "Start status LED"
+        - while:
+            condition:
+              or:
+                # Just a stupid way of making it loop forever ...
+                - lambda: 'return id(status_led_out) == 0;'
+                - lambda: 'return id(status_led_out) != 0;'
+            then:
+              - logger.log:
+                  format: "Ontime=%d offime=%d"
+                  args: [ 'id(status_led_on_time)', id(status_led_off_time) ]
+              - output.turn_on: status_led_out
+              - delay: !lambda "return id(status_led_on_time);"
+              - output.turn_off: status_led_out
+              - delay: !lambda "return id(status_led_off_time);"
