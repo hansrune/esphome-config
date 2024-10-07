@@ -1,0 +1,43 @@
+---
+#
+# Test ball valve
+#
+
+########################
+# Mandatory part ....
+########################
+substitutions:
+  system_name: waterx4-1
+  system_id: waterx4_1
+  friendly_name: 4-way watering 1
+  description: Test 4-way water valve control 
+  encryption_key: !secret esphome_encryption_key
+  ota_password: !secret esphome_ota_password
+
+packages:
+  device: !include devices/waterx4_esp32c3.yaml
+  ########################
+  # Optional part ... include below components and sensors as needed
+  ########################
+  # i2c: !include components/i2c_ball_valve_ctrl_esp32c3.yaml
+  # dallas: !include components/1wire_ball_valve_ctrl_esp32c3.yaml
+
+sensor:
+  - platform: pulse_counter
+    pin: 
+      number: GPIO10
+      mode:
+        input: true
+        pullup: true
+    name: "${friendly_name} flow"
+    id: ${system_id}_flow
+    update_interval: 30s
+    unit_of_measurement: "L/hr"
+    filters:
+      - lambda: return (x / 300.0);
+    total:
+      unit_of_measurement: "L"
+      name: "${friendly_name} total"
+      filters:
+        - lambda: return (x / 300.0);
+
