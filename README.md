@@ -3,14 +3,18 @@
 
 ESPhome config for my ESP32 boards
 
-# ESPEasy custom build
+The ESP32C3 boards used with this repository are:
 
-This is a quick start guide to using the ESPEasy custom build fork from [https://github.com/hansrune/esphome-config](https://github.com/hansrune/esphome-config)
+- [Ball valve controller](https://github.com/hansrune/BallValveController)
+- [Heat pump control board](https://github.com/hansrune/HeatPumpControl) with serial port and/or IR blaster interface
+- [4-way water valve controller](https://github.com/hansrune/WaterValveX4)
+- [3x relay board](https://github.com/hansrune/RelayBoardX3) used for garage doors or small motor speed control
 
+... but this should also work with similar boards
 
 ## Prereqs
 
-You will need:
+To use this ESPHome setupo, you will need:
 
 - A `bash` shell environment or similar (Linux, MacOS, WSL does not really matter)
 - python 3.8 or later
