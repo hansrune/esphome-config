@@ -21,7 +21,6 @@ text_sensor:
     id: ${system_id}_boot_time
     entity_category: diagnostic
 
-
 output:
   - platform: gpio
     id: status_led_out
@@ -31,24 +30,19 @@ output:
 
 switch:
   - platform: gpio
-    id: valve_a
-    pin:
-      number: GPIO3
-      inverted: false
-  - platform: gpio
-    id: valve_b
-    pin:
-      number: GPIO4
-      inverted: false
-  - platform: gpio
-    id: valve_c
+    id: relay_1st
     pin:
       number: GPIO5
       inverted: false
   - platform: gpio
-    id: valve_d
+    id: relay_2nd
     pin:
-      number: GPIO8
+      number: GPIO6
+      inverted: false
+  - platform: gpio
+    id: relay_3rd
+    pin:
+      number: GPIO10
       inverted: false
 
 esphome:

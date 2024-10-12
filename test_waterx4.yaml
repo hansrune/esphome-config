@@ -41,3 +41,49 @@ sensor:
       filters:
         - lambda: return (x / 300.0);
 
+valve:
+  - platform: template
+    name: "${friendly_name} a"
+    id: ${system_id}_valve_a
+    icon: mdi:valve
+    open_action:
+      - switch.turn_on: valve_a
+    close_action:
+      - switch.turn_off: valve_a
+    stop_action:
+      - switch.turn_off: valve_a
+    optimistic: true
+  - platform: template
+    name: "${friendly_name} b"
+    id: ${system_id}_valve_b
+    icon: mdi:valve
+    open_action:
+      - switch.turn_on: valve_b
+    close_action:
+      - switch.turn_off: valve_b
+    stop_action:
+      - switch.turn_off: valve_b
+    optimistic: true
+  - platform: template
+    name: "${friendly_name} c"
+    id: ${system_id}_valve_c
+    icon: mdi:valve
+    open_action:
+      - switch.turn_on: valve_c
+    close_action:
+      - switch.turn_off: valve_c
+    stop_action:
+      - switch.turn_off: valve_c
+    optimistic: true
+  - platform: template
+    name: "${friendly_name} d"
+    id: ${system_id}_valve_d
+    icon: mdi:valve
+    open_action:
+      - switch.turn_on: valve_d
+    close_action:
+      - switch.turn_off: valve_d
+    stop_action:
+      - switch.turn_off: valve_d
+    optimistic: true
+  
