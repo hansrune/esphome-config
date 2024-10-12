@@ -1,0 +1,74 @@
+---
+#
+# This is my ESPHome device template for my Ball Valve controller
+#
+packages:
+  <<: !include_dir_named ../common
+  board: !include ../boards/seeed_xiao_esp32c3.yaml
+
+globals:
+  - id: status_led_on_time
+    type: int
+    initial_value: '1000'
+  - id: status_led_off_time
+    type: int
+    initial_value: '5000'
+
+text_sensor:
+  - platform: template
+    #internal: true
+    name: "${friendly_name} boot time"
+    id: ${system_id}_boot_time
+    entity_category: diagnostic
+
+output:
+  - platform: gpio
+    id: status_led_out
+    pin:
+      number: GPIO9
+      inverted: true
+
+switch:
+  - platform: gpio
+    id: relay_1st
+    pin:
+      number: GPIO5
+      inverted: false
+  - platform: gpio
+    id: relay_2nd
+    pin:
+      number: GPIO6
+      inverted: false
+  - platform: gpio
+    id: relay_3rd
+    pin:
+      number: GPIO10
+      inverted: false
+
+esphome:
+  on_boot:
+    - priority: 800
+      then:
+        - lambda: |-
+            static char tstr[17];
+            time_t currTime = id(${system_id}_time_sntp).now().timestamp;
+            strftime(tstr, sizeof(tstr), "%Y-%m-%d %H:%M", localtime(&currTime));
+            id(${system_id}_boot_time).publish_state(tstr);
+
+    - priority: 600
+      then:
+        - logger.log: "Start status LED"
+        - while:
+            condition:
+              or:
+                # Just a stupid way of making it loop forever ...
+                - lambda: 'return id(status_led_out) == 0;'
+                - lambda: 'return id(status_led_out) != 0;'
+            then:
+              - logger.log:
+                  format: "Ontime=%d offime=%d"
+                  args: [ 'id(status_led_on_time)', id(status_led_off_time) ]
+              - output.turn_on: status_led_out
+              - delay: !lambda "return id(status_led_on_time);"
+              - output.turn_off: status_led_out
+              - delay: !lambda "return id(status_led_off_time);"

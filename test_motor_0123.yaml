@@ -1,0 +1,66 @@
+---
+#
+# Test ball valve
+#
+
+########################
+# Mandatory part ....
+########################
+substitutions:
+  system_name: motor123-1
+  system_id: motor123_1
+  friendly_name: Motor 1-2-3 1
+  description: Small motor 1-2-3 control 
+  encryption_key: !secret esphome_encryption_key
+  ota_password: !secret esphome_ota_password
+
+packages:
+  device: !include devices/relayx3_esp32c3.yaml
+  ########################
+  # Optional part ... include below components and sensors as needed
+  ########################
+  # i2c: !include components/i2c_ball_valve_ctrl_esp32c3.yaml
+  # dallas: !include components/1wire_ball_valve_ctrl_esp32c3.yaml
+
+select:
+  - platform: template
+    name: "${friendly_name} selector"
+    id: ${system_id}_selector
+    optimistic: true
+    options:
+      - "0"
+      - "1"
+      - "2"
+      - "3"
+    initial_option: "0"
+    set_action:
+      - if:
+          condition:
+            - lambda: 'return x == "0";'
+          then:
+            - switch.turn_off: relay_1st
+            - switch.turn_off: relay_2nd
+            - switch.turn_off: relay_3rd
+      - if:
+          condition:
+            - lambda: 'return x == "1";'
+          then:
+            - switch.turn_off: relay_1st
+            - switch.turn_off: relay_2nd
+            - switch.turn_on:  relay_3rd
+      - if:
+          condition:
+            - lambda: 'return x == "2";'
+          then:
+            - switch.turn_off: relay_1st
+            - switch.turn_on:  relay_2nd
+            - switch.turn_on:  relay_3rd
+      - if:
+          condition:
+            - lambda: 'return x == "3";'
+          then:
+            - switch.turn_on:  relay_1st
+            - switch.turn_on:  relay_2nd
+            - switch.turn_on:  relay_3rd
+
+
