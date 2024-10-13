@@ -1,0 +1,137 @@
+---
+#
+# Test Relay3X board used as dual garage door controller
+#
+
+########################
+# Mandatory part ....
+########################
+substitutions:
+  system_name: garagedoors1
+  system_id: garage_1_doors
+  friendly_name: Garage doors controller 
+  description: Garage doors controller 
+  encryption_key: !secret esphome_encryption_key
+  ota_password: !secret esphome_ota_password
+
+packages:
+  device: !include devices/relayx3_esp32c3.yaml
+  ########################
+  # Optional part ... include below components and sensors as needed
+  ########################
+  # i2c: !include components/i2c_ball_valve_ctrl_esp32c3.yaml
+  # dallas: !include components/1wire_ball_valve_ctrl_esp32c3.yaml
+
+select:
+  - platform: template
+    name: "${friendly_name} pushbuttons"
+    id: ${system_id}_pushbuttons
+    icon: "mdi:lock"
+    optimistic: true
+    options:
+      - "Disabled"
+      - "Enabled"
+    initial_option: "Enabled"
+    set_action:
+      - if:
+          condition:
+            - lambda: 'return x == "Enabled";'
+          then:
+            - switch.turn_off: relay_3rd
+            - output.turn_off: locked_led_out
+      - if:
+          condition:
+            - lambda: 'return x == "Disabled";'
+          then:
+            - switch.turn_on: relay_3rd
+            - output.turn_on: locked_led_out
+
+cover:
+  - platform: feedback
+    name: "${friendly_name} door 1"
+    id: ${system_id}_door_1
+    icon: mdi:door
+    device_class: garage
+    has_built_in_endstop: true
+    open_action:
+      - lambda: |-
+          if (id(${system_id}_1_closed).state != 0) {
+            ESP_LOGI("Door 1", "1 closed != 0");
+            id(relay_1st).turn_on();
+          }
+          else {
+            ESP_LOGI("Door 1", "No action - already open/opening");
+          }
+      - delay: 2s
+      - switch.turn_off: relay_1st
+    open_duration: 10s
+    # open_endstop: 
+    #   - lambda:  '${system_id}_1_closed == 0;'
+    close_action:
+      - lambda: |-
+          if (id(${system_id}_1_closed).state == 0) {
+            ESP_LOGI("Door 1", "1 closed == 0");
+            id(relay_1st).turn_on();
+          }
+          else {
+            ESP_LOGI("Door 1", "No action - already closed");
+          }
+      - delay: 2s
+      - switch.turn_off: relay_1st
+    close_duration: 10s
+    close_endstop: ${system_id}_1_closed
+    stop_action:
+      - lambda: |-
+          if (id(${system_id}_1_closed).state == 0) {
+            ESP_LOGI("Door 1", "1 closed == 0");
+            id(relay_1st).turn_on();
+          }
+          else {
+            ESP_LOGI("Door 1", "No action - cannot stop when in closed state");
+          }
+      - delay: 500ms
+      - switch.turn_off: relay_1st
+  - platform: feedback
+    name: "${friendly_name} door 2"
+    id: ${system_id}_door_2
+    icon: mdi:door
+    device_class: garage
+    has_built_in_endstop: true
+    open_action:
+      - lambda: |-
+          if (id(${system_id}_2_closed).state != 0) {
+            ESP_LOGI("Door 2", "2 closed != 0");
+            id(relay_1st).turn_on();
+          }
+          else {
+            ESP_LOGI("Door 2", "No action - already open/opening");
+          }
+      - delay: 2s
+      - switch.turn_off: relay_2nd
+    open_duration: 10s
+    # open_endstop: 
+    #   - lambda:  '${system_id}_1_closed == 0;'
+    close_action:
+      - lambda: |-
+          if (id(${system_id}_2_closed).state == 0) {
+            ESP_LOGI("Door 1", "1 closed == 0");
+            id(relay_1st).turn_on();
+          }
+          else {
+            ESP_LOGI("Door 2", "No action - already closed");
+          }
+      - delay: 2s
+      - switch.turn_off: relay_2nd
+    close_duration: 10s
+    close_endstop: ${system_id}_2_closed
+    stop_action:
+      - lambda: |-
+          if (id(${system_id}_2_closed).state == 0) {
+            ESP_LOGI("Door 2", "2 closed == 0");
+            id(relay_2nd).turn_on();
+          }
+          else {
+            ESP_LOGI("Door 2", "No action - cannot stop when in closed state");
+          }
+      - delay: 500ms
+      - switch.turn_off: relay_2nd
