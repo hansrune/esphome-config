@@ -27,6 +27,11 @@ output:
     pin:
       number: GPIO9
       inverted: true
+  - platform: gpio
+    id: locked_led_out
+    pin:
+      number: GPIO2
+      inverted: true
 
 switch:
   - platform: gpio
@@ -44,6 +49,45 @@ switch:
     pin:
       number: GPIO10
       inverted: false
+
+binary_sensor:
+  - platform: gpio
+    id: ${system_id}_1_closed
+    name: "${friendly_name} 1 closed"
+    pin:
+      number: GPIO4
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    # on_press:
+    #   then: 
+    #     - globals.set:
+    #         id: status_led_on_time
+    #         value: '5000'
+    # on_release:
+    #     - globals.set:
+    #         id: status_led_on_time
+    #         value: '1000'
+
+  - platform: gpio
+    id: ${system_id}_2_closed
+    name: "${friendly_name} 2 closed"
+    pin:
+      number: GPIO3
+      mode: 
+        input: true
+        pullup: true
+      inverted: true
+    # on_press:
+    #   then: 
+    #     - globals.set:
+    #         id: status_led_off_time
+    #         value: '5000'
+    # on_release:
+    #     - globals.set:
+    #         id: status_led_off_time
+    #         value: '1000'
 
 esphome:
   on_boot:
