@@ -1,6 +1,6 @@
 ---
 #
-# Test ball valve
+# Test Relay3X board used as motor controller
 #
 
 ########################
@@ -9,7 +9,7 @@
 substitutions:
   system_name: motor123-1
   system_id: motor123_1
-  friendly_name: Motor 1-2-3 1
+  friendly_name: Motor 1-2-3 selector 1
   description: Small motor 1-2-3 control 
   encryption_key: !secret esphome_encryption_key
   ota_password: !secret esphome_ota_password
@@ -26,6 +26,7 @@ select:
   - platform: template
     name: "${friendly_name} selector"
     id: ${system_id}_selector
+    icon: "mdi:fan"
     optimistic: true
     options:
       - "0"
