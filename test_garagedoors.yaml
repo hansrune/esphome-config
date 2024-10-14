@@ -51,7 +51,7 @@ cover:
     name: "${friendly_name} door 1"
     id: ${system_id}_door_1
     icon: mdi:door
-    device_class: garage
+    # device_class: garage
     has_built_in_endstop: true
     open_action:
       - lambda: |-
