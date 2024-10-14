@@ -29,19 +29,19 @@ select:
     icon: "mdi:lock"
     optimistic: true
     options:
-      - "Disabled"
-      - "Enabled"
-    initial_option: "Enabled"
+      - "Locked"
+      - "Unlocked"
+    initial_option: "Unlocked"
     set_action:
       - if:
           condition:
-            - lambda: 'return x == "Enabled";'
+            - lambda: 'return x == "Unlocked";'
           then:
             - switch.turn_off: relay_3rd
             - output.turn_off: locked_led_out
       - if:
           condition:
-            - lambda: 'return x == "Disabled";'
+            - lambda: 'return x == "Locked";'
           then:
             - switch.turn_on: relay_3rd
             - output.turn_on: locked_led_out
@@ -50,8 +50,8 @@ cover:
   - platform: feedback
     name: "${friendly_name} door 1"
     id: ${system_id}_door_1
-    icon: mdi:door
     device_class: garage
+    #icon: mdi:door
     has_built_in_endstop: true
     open_action:
       - lambda: |-
@@ -94,7 +94,6 @@ cover:
   - platform: feedback
     name: "${friendly_name} door 2"
     id: ${system_id}_door_2
-    icon: mdi:door
     device_class: garage
     has_built_in_endstop: true
     open_action:
@@ -135,3 +134,21 @@ cover:
           }
       - delay: 500ms
       - switch.turn_off: relay_2nd
+
+sensor: 
+  # - platform: ultrasonic
+  #   name: "${friendly_name} distance 1"
+  #   id: ${system_id}_distance_1
+  #   update_interval: 5s
+  #   # TX on board
+  #   trigger_pin: GPIO21
+  #   # I2C clock
+  #   echo_pin: GPIO8
+  # - platform: ultrasonic
+  #   name: "${friendly_name} distance 2"
+  #   id: ${system_id}_distance_1
+  #   update_interval: 5s
+  #   # RX on board
+  #   trigger_pin: GPIO20
+  #   # I2C data
+  #   echo_pin: GPIO7
