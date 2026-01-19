@@ -69,10 +69,10 @@ climate:
       name: "${friendly_name} CN105 Compressor Frequency"
     vertical_vane_select:
       name: "${friendly_name} CN105 Vertical Vane"
-    horizontal_vane_select:
-      name: "${friendly_name} CN105 Horizontal Vane"
     isee_sensor:
       name: "${friendly_name} CN105 ISee Sensor"
     remote_temperature_timeout: 30min
     debounce_delay : 500ms
     update_interval: 4s
+    airflow_control_select:
+      name: "${friendly_name} CN105 Airflow Control"
