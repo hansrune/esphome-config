@@ -7,15 +7,16 @@
 # Mandatory part ....
 ########################
 substitutions:
-  system_name: waterx4-1
-  system_id: waterx4_1
-  friendly_name: 4-way watering 1
+  system_name: waterx4-c3v2
+  system_id: waterx4_c3v2
+  friendly_name: 4-way watering c3 v2
   description: Test 4-way water valve control 
   encryption_key: !secret esphome_encryption_key
   ota_password: !secret esphome_ota_password
 
 packages:
-  device: !include devices/waterx4_esp32c3.yaml
+  board: !include boards/xiao_esp32c3-waterx4_v2.yaml
+  device: !include devices/waterx4.yaml
   ########################
   # Optional part ... include below components and sensors as needed
   ########################
@@ -25,7 +26,7 @@ packages:
 sensor:
   - platform: pulse_counter
     pin: 
-      number: GPIO10
+      number: ${waterx4_meter_in}
       mode:
         input: true
         pullup: true

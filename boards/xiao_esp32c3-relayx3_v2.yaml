@@ -1,0 +1,23 @@
+---
+# Seeed Studio XIAO ESP32C3
+#
+# https://docs.platformio.org/en/latest/boards/espressif32/seeed_xiao_esp32c3.html
+#
+esp32:
+  board: seeed_xiao_esp32c3
+  framework:
+    type: arduino # or arduino # alternatively
+    version: recommended
+
+substitutions:
+  relayx3_relay1: GPIO5
+  relayx3_relay2: GPIO6
+  relayx3_relay3: GPIO10
+  relayx3_statusled_out_pin: GPIO9
+  relayx3_lockled_out_pin: GPIO2
+  i2c_sda_pin: GPIO6
+  i2c_scl_pin: GPIO7
+  relayx3_input_pin1: GPIO4
+  relayx3_input_pin2: GPIO3
+  uart1_rx_pin: GPIO20
+  uart1_tx_pin: GPIO21

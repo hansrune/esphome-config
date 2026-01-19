@@ -4,7 +4,6 @@
 #
 packages:
   <<: !include_dir_named ../common
-  board: !include ../boards/seeed_xiao_esp32c3.yaml
 
 globals:
   - id: status_led_on_time
@@ -13,8 +12,6 @@ globals:
   - id: status_led_off_time
     type: int
     initial_value: '5000'
-
-
 
 text_sensor:
   - platform: template
@@ -27,18 +24,69 @@ output:
   - platform: gpio
     id: status_led_out
     pin:
-      number: GPIO9
+      number: ${relayx3_statusled_out_pin}
+      inverted: true
+  - platform: gpio
+    id: locked_led_out
+    pin:
+      number: ${relayx3_lockled_out_pin}
       inverted: true
 
+switch:
+  - platform: gpio
+    id: relay_1st
+    pin:
+      number: ${relayx3_relay1}
+      inverted: false
+  - platform: gpio
+    id: relay_2nd
+    pin:
+      number: ${relayx3_relay2}
+      inverted: false
+  - platform: gpio
+    id: relay_3rd
+    pin:
+      number: ${relayx3_relay3}
+      inverted: false
 
-# interval:
-#   - interval: 1h
-#     then:
-#       - output.turn_on: valve_battery_read_enable
-#       - delay: 20ms
-#       - component.update: ${system_id}_battery_voltage
-#       - delay: 3s 
-#       - output.turn_off: valve_battery_read_enable
+binary_sensor:
+  - platform: gpio
+    id: ${system_id}_1_closed
+    name: "${friendly_name} 1 closed"
+    pin:
+      number: ${relayx3_input_pin1}
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    # on_press:
+    #   then: 
+    #     - globals.set:
+    #         id: status_led_on_time
+    #         value: '5000'
+    # on_release:
+    #     - globals.set:
+    #         id: status_led_on_time
+    #         value: '1000'
+
+  - platform: gpio
+    id: ${system_id}_2_closed
+    name: "${friendly_name} 2 closed"
+    pin:
+      number: ${relayx3_input_pin2}
+      mode: 
+        input: true
+        pullup: true
+      inverted: true
+    # on_press:
+    #   then: 
+    #     - globals.set:
+    #         id: status_led_off_time
+    #         value: '5000'
+    # on_release:
+    #     - globals.set:
+    #         id: status_led_off_time
+    #         value: '1000'
 
 esphome:
   on_boot:

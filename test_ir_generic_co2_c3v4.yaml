@@ -1,0 +1,44 @@
+---
+#
+# IR blaster generic IO pcb with CO2 + dallas + PIR sensors + i2c sensors
+#
+
+substitutions:
+  system_name: io-generic-c3v4
+  system_id: io_generic_c3v4
+  friendly_name: IO c3v4
+  description: Generic IO with IR blaster, I2C and CO2 sensors
+
+packages:
+  board: !include boards/xiao_esp32c3-generic_ir_co2_v4.yaml
+  device: !include devices/hp_genio.yaml
+  i2c: !include components/i2c.yaml
+  dallas: !include components/1wire_x1.yaml
+
+# esphome:
+#   platformio_options:
+#     board_build.extra_flags:
+#       - "-DARDUINO_USB_CDC_ON_BOOT=0"
+#       - "-DARDUINO_USB_MODE=1"  
+      
+uart:
+  id: hpuart_esp32c6
+  rx_pin: ${uart1_rx_pin}
+  tx_pin: ${uart1_tx_pin}
+  baud_rate: 2400
+
+sensor: 
+  - <<: !include sensors/htu21d.yaml
+  - <<: !include sensors/tsl2561.yaml
+  - <<: !include sensors/mhz19.yaml
+#  - <<: !include sensors/dallas-x1.yaml
+
+binary_sensor:
+  - platform: gpio
+    device_class: motion
+    id: ${system_id}_pir_sensor
+    name: "${friendly_name} PIR sensor"
+    pin:
+      number: ${generic_input_pin1}
+      mode: INPUT_PULLUP
+      inverted: true

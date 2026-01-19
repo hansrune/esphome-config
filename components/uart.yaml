@@ -1,0 +1,8 @@
+---
+# 
+# UART for my XIAO boards
+#
+uart:
+  rx_pin: ${generic_rx_pin}
+  tx_pin: ${generic_tx_pin}
+  baud_rate: 9600

@@ -4,17 +4,17 @@
 #
 
 substitutions:
-  system_name: mitsubishi-hp-1
-  system_id: heatpump_1
-  friendly_name: Mitsubishi HP
+  system_name: mitsubishi-hp-c3v4
+  system_id: heatpump_c3v4
+  friendly_name: Mitsubishi HP c3 v4
   description: Uses generic IO board with IR blaster, serial port, I2C and CO2 sensors
-  encryption_key: !secret esphome_encryption_key
-  ota_password: !secret esphome_ota_password
+
 
 packages:
-  device: !include devices/hp_genio_esp32c3.yaml
-  i2c: !include components/i2c_hp_genio_esp32c3.yaml
-  dallas: !include components/1wire_hp_genio_esp32c3.yaml
+  board: !include boards/xiao_esp32c3-generic_ir_co2_v4.yaml
+  device: !include devices/hp_genio.yaml
+  i2c: !include components/i2c.yaml
+  dallas: !include components/1wire_x1.yaml
 
 # esphome:
 #   platformio_options:
@@ -23,9 +23,9 @@ packages:
 #       - "-DARDUINO_USB_MODE=1"  
 
 uart:
-  id: hpuart_esp32c3
-  rx_pin: GPIO20
-  tx_pin: GPIO21
+  id: hp_uart
+  rx_pin: ${uart1_rx_pin}
+  tx_pin: ${uart1_tx_pin}
   baud_rate: 2400
 
 sensor: 
@@ -40,17 +40,8 @@ external_components:
       path: custom_components
   - source: github://echavet/MitsubishiCN105ESPHome
 
-# remote_receiver:
-#   id: ${system_id}_rcvr
-#   pin:
-#     number: GPIO3
-#     inverted: True
-#   rmt_channel: 2
-#   tolerance: 55%
-#   dump: all
-
 remote_transmitter:
-  pin: GPIO4
+  pin: ${generic_irled_out_pin}
   carrier_duty_percent: 50%
 
 climate:

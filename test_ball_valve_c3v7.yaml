@@ -7,33 +7,34 @@
 # Mandatory part ....
 ########################
 substitutions:
-  system_name: ball-valve-1
-  system_id: ball_valve_1
-  friendly_name: Ball valve 1
+  system_name: ball-valve-c3v7
+  system_id: ball_valve_c3v7
+  friendly_name: Ball valve c3 v7
   description: Test ball valve controller with CR05 feedback wiring
   encryption_key: !secret esphome_encryption_key
   ota_password: !secret esphome_ota_password
 
 packages:
-  device: !include devices/ball_valve_ctrl_esp32c3.yaml
+  board: !include boards/xiao_esp32c3-ballvalve_v7.yaml
+  device: !include devices/ball_valve_ctrl.yaml
   ########################
   # Optional part ... include below components and sensors as needed
   ########################
-  i2c: !include components/i2c_ball_valve_ctrl_esp32c3.yaml
-  dallas: !include components/1wire_ball_valve_ctrl_esp32c3.yaml
+  i2c: !include components/i2c.yaml
+  dallas: !include components/1wire_x2.yaml
 
 sensor: 
   - <<: !include sensors/htu21d.yaml
   - platform: dallas_temp
     name: "${friendly_name} upper 1-wire"
     id: ${system_id}_temperature_upper
-    one_wire_id: wire_tx
+    one_wire_id: wire_1
     #dallas_id: wire_tx
     #address:  # only one sensor per wire - so none needed
   - platform: dallas_temp
     name: "${friendly_name} lower 1-wire"
     id: ${system_id}_temperature_lower
-    one_wire_id: wire_rx
+    one_wire_id: wire_2
     #allas_id: wire_rx
     #address:  # only one sensor per wire - so none needed
 

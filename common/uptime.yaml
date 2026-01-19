@@ -1,0 +1,7 @@
+---
+# Example configuration entry
+sensor:
+  - platform: uptime
+    id: ${system_id}_uptime
+    type: seconds
+    name: Uptime Sensor

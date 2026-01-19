@@ -1,0 +1,22 @@
+---
+# Seeed Studio XIAO ESP32C3
+#
+# https://docs.platformio.org/en/latest/boards/espressif32/seeed_xiao_esp32c3.html
+#
+esp32:
+  board: seeed_xiao_esp32c3
+  framework:
+    type: arduino # or arduino # alternatively
+    version: recommended
+
+substitutions:
+  waterx4_relay1: GPIO3
+  waterx4_relay2: GPIO4
+  waterx4_relay3: GPIO5
+  waterx4_relay4: GPIO8
+  waterx4_statusled_out_pin: GPIO9
+  i2c_sda_pin: GPIO6
+  i2c_scl_pin: GPIO7
+  waterx4_meter_in: GPIO10
+  uart1_rx_pin: GPIO20
+  uart1_tx_pin: GPIO21

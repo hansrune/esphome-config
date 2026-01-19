@@ -4,7 +4,6 @@
 #
 packages:
   <<: !include_dir_named ../common
-  board: !include ../boards/seeed_xiao_esp32c3.yaml
 
 globals:
   - id: status_led_on_time
@@ -21,34 +20,33 @@ text_sensor:
     id: ${system_id}_boot_time
     entity_category: diagnostic
 
-
 output:
   - platform: gpio
     id: status_led_out
     pin:
-      number: GPIO9
+      number: ${waterx4_statusled_out_pin}
       inverted: true
 
 switch:
   - platform: gpio
     id: valve_a
     pin:
-      number: GPIO3
+      number: ${waterx4_relay1}
       inverted: false
   - platform: gpio
     id: valve_b
     pin:
-      number: GPIO4
+      number: ${waterx4_relay2}
       inverted: false
   - platform: gpio
     id: valve_c
     pin:
-      number: GPIO5
+      number: ${waterx4_relay3}
       inverted: false
   - platform: gpio
     id: valve_d
     pin:
-      number: GPIO8
+      number: ${waterx4_relay4}
       inverted: false
 
 esphome:

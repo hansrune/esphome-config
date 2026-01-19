@@ -1,0 +1,20 @@
+---
+# Seeed Studio XIAO ESP32C3
+#
+# https://docs.platformio.org/en/latest/boards/espressif32/seeed_xiao_esp32c3.html
+#
+esp32:
+  board: seeed_xiao_esp32c3
+  framework:
+    type: arduino # or arduino # alternatively
+    version: recommended
+
+substitutions:
+  generic_irled_out_pin: GPIO4
+  generic_statusled_out_pin: GPIO9
+  i2c_sda_pin: GPIO6
+  i2c_scl_pin: GPIO7
+  onewire_pin1: GPIO5
+  generic_input_pin1: GPIO3
+  uart1_rx_pin: GPIO20
+  uart1_tx_pin: GPIO21

@@ -1,0 +1,8 @@
+---
+# 
+# UART for my XIAO ESP32C3 my boards
+#
+uart:
+  rx_pin: GPIO17
+  tx_pin: GPIO16
+  baud_rate: 9600

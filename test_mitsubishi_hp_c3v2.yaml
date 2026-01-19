@@ -1,0 +1,86 @@
+---
+#
+# IR blaster generic IO pcb with IR out + heatpump serial + i2c sensors
+#
+
+substitutions:
+  system_name: mitsubishi-hp-c3v2
+  system_id: heatpump_cc3v2
+  friendly_name: Mitsubishi HP c3 v2
+  description: Uses generic IO board with IR blaster, serial port, I2C and CO2 sensors
+
+packages:
+  board: !include boards/xiao_esp32c3-generic_ir_co2_v4.yaml
+  device: !include devices/hp_genio.yaml
+  i2c: !include components/i2c.yaml
+  dallas: !include components/1wire_x1.yaml
+
+# esphome:
+#   platformio_options:
+#     board_build.extra_flags:
+#       - "-DARDUINO_USB_CDC_ON_BOOT=0"
+#       - "-DARDUINO_USB_MODE=1"  
+
+uart:
+  id: hp_uart
+  rx_pin: ${uart1_rx_pin}
+  tx_pin: ${uart1_tx_pin}
+  baud_rate: 2400
+
+sensor: 
+  - <<: !include sensors/htu21d.yaml
+  #- <<: !include sensors/tsl2561.yaml
+  - <<: !include sensors/mhz19.yaml
+  #- <<: !include sensors/dallas-x1.yaml
+
+external_components:
+  - source:
+      type: local
+      path: custom_components
+  - source: github://echavet/MitsubishiCN105ESPHome
+
+# remote_receiver:
+#   id: ${system_id}_rcvr
+#   pin:
+#     number: GPIO3
+#     inverted: True
+#   rmt_channel: 2
+#   tolerance: 55%
+#   dump: all
+
+remote_transmitter:
+  pin: ${generic_irled_out_pin}
+  carrier_duty_percent: 50%
+
+climate:
+  # Arduino platform only
+  - platform: heatpumpir
+    id: ${system_id}_hp_ir
+    name: "${friendly_name} IR" 
+    protocol: mitsubishi_heavy_kj
+    max_temperature: 31
+    min_temperature: 10
+    vertical_default: auto
+    horizontal_default: auto
+
+  - platform: cn105
+    id: ${system_id}_hp_cn105
+    name: "${friendly_name} CN105"
+    icon: mdi:heat-pump
+    visual:
+      min_temperature: 10
+      max_temperature: 31
+      temperature_step:
+        target_temperature: 1
+        current_temperature: 0.1
+    compressor_frequency_sensor:
+      name: "${friendly_name} CN105 Compressor Frequency"
+    vertical_vane_select:
+      name: "${friendly_name} CN105 Vertical Vane"
+    horizontal_vane_select:
+      name: "${friendly_name} CN105 Horizontal Vane"
+    isee_sensor:
+      name: "${friendly_name} CN105 ISee Sensor"
+    remote_temperature_timeout: 30min
+    debounce_delay : 500ms
+    update_interval: 4s

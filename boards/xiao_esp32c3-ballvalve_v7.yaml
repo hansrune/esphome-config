@@ -1,0 +1,24 @@
+---
+# Seeed Studio XIAO ESP32C3
+#
+# https://docs.platformio.org/en/latest/boards/espressif32/seeed_xiao_esp32c3.html
+#
+esp32:
+  board: seeed_xiao_esp32c3
+  framework:
+    type: arduino # or arduino # alternatively
+    version: recommended
+
+substitutions:
+  valve_statusled_out_pin: GPIO9
+  valve_relay_out_pin: GPIO10
+  valve_battery_readtrigger_pin: GPIO2
+  valve_battery_adc_pin: GPIO3
+  valve_open_in_pin: GPIO4
+  valve_closed_in_pin: GPIO5
+  i2c_sda_pin: GPIO6
+  i2c_scl_pin: GPIO7
+  onewire_pin1: GPIO20
+  onewire_pin2: GPIO21
+  # uart1_rx_pin: GPIO20
+  # uart1_tx_pin: GPIO21

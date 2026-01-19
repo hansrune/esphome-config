@@ -7,20 +7,16 @@
 # Mandatory part ....
 ########################
 substitutions:
-  system_name: garagedoors1
-  system_id: garage_1_doors
-  friendly_name: Garage doors controller 
-  description: Garage doors controller 
+  system_name: garagedoors-c3v2
+  system_id: garage_doors_c3v2
+  friendly_name: Garage doors controller c3 v2
+  description: Garage doors controller C3 V2
   encryption_key: !secret esphome_encryption_key
   ota_password: !secret esphome_ota_password
 
 packages:
-  device: !include devices/relayx3_esp32c3.yaml
-  ########################
-  # Optional part ... include below components and sensors as needed
-  ########################
-  # i2c: !include components/i2c_ball_valve_ctrl_esp32c3.yaml
-  # dallas: !include components/1wire_ball_valve_ctrl_esp32c3.yaml
+  board: !include boards/xiao_esp32c3-relayx3_v2.yaml
+  device: !include devices/relayx3.yaml
 
 select:
   - platform: template

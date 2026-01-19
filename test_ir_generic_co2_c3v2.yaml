@@ -4,17 +4,17 @@
 #
 
 substitutions:
-  system_name: io-generic-1
-  system_id: io_generic_1
-  friendly_name: IO 1
+  system_name: io-generic-c3v2
+  system_id: io_generic_c3v2
+  friendly_name: IO c3 v2
   description: Generic IO with IR blaster, I2C and CO2 sensors
-  encryption_key: !secret esphome_encryption_key
-  ota_password: !secret esphome_ota_password
+
 
 packages:
-  device: !include devices/hp_genio_esp32c3.yaml
-  i2c: !include components/i2c_hp_genio_esp32c3.yaml
-  dallas: !include components/1wire_hp_genio_esp32c3.yaml
+  board: !include boards/xiao_esp32c3-generic_ir_co2_v2.yaml
+  device: !include devices/hp_genio.yaml
+  i2c: !include components/i2c.yaml
+  dallas: !include components/1wire_x1.yaml
 
 # esphome:
 #   platformio_options:
@@ -23,9 +23,9 @@ packages:
 #       - "-DARDUINO_USB_MODE=1"  
       
 uart:
-  id: hpuart_esp32c3
-  rx_pin: GPIO20
-  tx_pin: GPIO21
+  id: mhz_uart
+  rx_pin: ${uart1_rx_pin}
+  tx_pin: ${uart1_tx_pin}
   baud_rate: 2400
 
 sensor: 
@@ -40,6 +40,6 @@ binary_sensor:
     id: ${system_id}_pir_sensor
     name: "${friendly_name} PIR sensor"
     pin:
-      number: GPIO10
+      number: ${generic_input_pin1}
       mode: INPUT_PULLUP
       inverted: true

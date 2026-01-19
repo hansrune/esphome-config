@@ -1,0 +1,13 @@
+---
+#
+# Generix 1 wire dallas sensor when two on two ports are being used
+#
+- platform: dallas_temp
+  name: "${friendly_name} 1-wire sensor 1"
+  id: ${system_id}_1wire_temperature_1
+  one_wire_id: wire_1
+- platform: dallas_temp
+  name: "${friendly_name} 1-wire sensor 2"
+  id: ${system_id}_1wire_temperature_2
+  one_wire_id: wire_2
+#index: 0 # only one sensor per wire - so index is safe

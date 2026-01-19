@@ -3,7 +3,8 @@
 #
 packages:
   <<: !include_dir_named ../common
-  board: !include ../boards/seeed_xiao_esp32c3.yaml
+  #board: !include ../boards/seeed_xiao_esp32c6.yaml
+
 
 globals:
   - id: valve_normally_open
@@ -23,7 +24,7 @@ globals:
 
 sensor:
   - platform: adc
-    pin: GPIO3 # A1
+    pin: ${valve_battery_adc_pin} # A1
     id: ${system_id}_battery_voltage
     name: "${friendly_name} battery"
     update_interval: never
@@ -41,7 +42,7 @@ binary_sensor:
     id: ${system_id}_status_open
     name: "${friendly_name} open"
     pin:
-      number: GPIO4
+      number: ${valve_open_in_pin}
       mode: INPUT_PULLUP
       inverted: true
     on_press:
@@ -58,7 +59,7 @@ binary_sensor:
     id: ${system_id}_status_closed
     name: "${friendly_name} closed"
     pin:
-      number: GPIO5
+      number: ${valve_closed_in_pin}
       mode: INPUT_PULLUP
       inverted: true
     on_press:
@@ -89,20 +90,20 @@ switch:
     id: ${system_id}_valve_relay
     name: "${friendly_name} relay"
     entity_category: diagnostic
-    pin: GPIO10
+    pin: ${valve_relay_out_pin}
     restore_mode: ALWAYS_OFF
 
 output:
   - platform: gpio
     id: valve_battery_read_enable
     pin:
-      number: GPIO2
+      number: ${valve_battery_readtrigger_pin}
       inverted: true
 
   - platform: gpio
     id: valve_status_led_out
     pin:
-      number: GPIO9
+      number: ${valve_statusled_out_pin}
       inverted: true
 
 cover:

@@ -4,7 +4,7 @@
 #
 packages:
   <<: !include_dir_named ../common
-  board: !include ../boards/seeed_xiao_esp32c3.yaml
+  #board: !include ../boards/${esp_module}-${pcb_rev}.yaml
 
 globals:
   - id: status_led_on_time
@@ -21,73 +21,23 @@ text_sensor:
     id: ${system_id}_boot_time
     entity_category: diagnostic
 
+
 output:
   - platform: gpio
     id: status_led_out
     pin:
-      number: GPIO9
-      inverted: true
-  - platform: gpio
-    id: locked_led_out
-    pin:
-      number: GPIO2
+      number: ${generic_statusled_out_pin}
       inverted: true
 
-switch:
-  - platform: gpio
-    id: relay_1st
-    pin:
-      number: GPIO5
-      inverted: false
-  - platform: gpio
-    id: relay_2nd
-    pin:
-      number: GPIO6
-      inverted: false
-  - platform: gpio
-    id: relay_3rd
-    pin:
-      number: GPIO10
-      inverted: false
 
-binary_sensor:
-  - platform: gpio
-    id: ${system_id}_1_closed
-    name: "${friendly_name} 1 closed"
-    pin:
-      number: GPIO4
-      mode:
-        input: true
-        pullup: true
-      inverted: true
-    # on_press:
-    #   then: 
-    #     - globals.set:
-    #         id: status_led_on_time
-    #         value: '5000'
-    # on_release:
-    #     - globals.set:
-    #         id: status_led_on_time
-    #         value: '1000'
-
-  - platform: gpio
-    id: ${system_id}_2_closed
-    name: "${friendly_name} 2 closed"
-    pin:
-      number: GPIO3
-      mode: 
-        input: true
-        pullup: true
-      inverted: true
-    # on_press:
-    #   then: 
-    #     - globals.set:
-    #         id: status_led_off_time
-    #         value: '5000'
-    # on_release:
-    #     - globals.set:
-    #         id: status_led_off_time
-    #         value: '1000'
+# interval:
+#   - interval: 1h
+#     then:
+#       - output.turn_on: valve_battery_read_enable
+#       - delay: 20ms
+#       - component.update: ${system_id}_battery_voltage
+#       - delay: 3s 
+#       - output.turn_off: valve_battery_read_enable
 
 esphome:
   on_boot:

@@ -5,5 +5,5 @@
 #
 one_wire:
   - platform: gpio
-    pin: GPIO5
+    pin: ${onewire_pin1}
     id: wire_1

@@ -1,0 +1,14 @@
+---
+# 1-wire
+#
+# https://esphome.io/components/one_wire
+#
+# Using TX and RX ports
+#
+one_wire:
+  - platform: gpio
+    pin: ${onewire_pin1}
+    id: wire_1
+  - platform: gpio
+    pin: ${onewire_pin2}
+    id: wire_2
